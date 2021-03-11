@@ -1,0 +1,14 @@
+diff --git a/lib/bluetooth-client.c b/lib/bluetooth-client.c
+index 2c039b3..fd75bbf 100644
+--- a/lib/bluetooth-client.c
++++ b/lib/bluetooth-client.c
+@@ -407,6 +407,9 @@ device_added (GDBusObjectManager   *manager,
+ 
+ 	device_resolve_type_and_icon (device, &type, &icon);
+ 
++	if (name == NULL && type == BLUETOOTH_TYPE_ANY)
++		return;
++
+ 	if (get_iter_from_path (priv->store, &parent, adapter_path) == FALSE)
+ 		return;
+ 
