@@ -3,3 +3,4 @@ client-Disconnect-all-signal-handlers-when-client-is-disp.patch
 # gooroom
 gooroom-pin-code-dialog-cancel-button-fix.patch
 gooroom-unkown-type-bluetooth-filter.patch
+gooroom-unkown-type-filter-value-change.patch
