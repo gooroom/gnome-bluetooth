@@ -1,3 +1,16 @@
+gnome-bluetooth (3.28.2-4~deb10u1+grm2u2) gooroom-2.0; urgency=medium
+
+  [ jenkins ]
+  * [5a80c5d5] Version 3.28.2-4~deb10u1+grm2u1 released
+
+  [ boyeon.choi ]
+  * [f0022886] [Bug:3151] Unkown type bluetooth filter
+  * [f1294247] [Bug:3151] Changed filter value
+
+  [ Gooroom Autobuilder ]
+
+ -- Gooroom Autobuilder <jenkins@gooroom.kr>  Wed, 31 Mar 2021 18:07:21 +0900
+
 gnome-bluetooth (3.28.2-4~deb10u1+grm2u1) gooroom-2.0; urgency=medium
 
   [ HaeRyong Jeong ]
