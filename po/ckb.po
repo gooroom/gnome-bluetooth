@@ -1,130 +1,129 @@
-# Croatian translation for bluez-gnome
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
-# This file is distributed under the same license as the bluez-gnome package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# Kurdish (Sorani) translation for gnome-bluetooth
+# Copyright (c) 2020 Rosetta Contributors and Canonical Ltd 2020
+# This file is distributed under the same license as the gnome-bluetooth package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bluez-gnome\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-bluetooth/issues\n"
-"POT-Creation-Date: 2019-07-18 13:00+0000\n"
-"PO-Revision-Date: 2019-07-19 23:52+0200\n"
-"Last-Translator: gogo <linux.hr@protonmail.com>\n"
-"Language-Team: Croatian <hr@li.org>\n"
-"Language: hr\n"
+"Project-Id-Version: gnome-bluetooth\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2019-09-10 13:06+0000\n"
+"PO-Revision-Date: 2020-03-05 19:44+0300\n"
+"Last-Translator: Jwtiyar Nariman <jwtiyar@gmail.com>\n"
+"Language-Team: Kurdish (Sorani) <ckb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-09-15 12:11+0000\n"
-"X-Generator: Poedit 2.2.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2020-03-05 16:00+0000\n"
+"X-Generator: Poedit 2.3\n"
+"Language: ckb\n"
 
 #: lib/bluetooth-chooser-button.c:71
 msgid "Click to select device…"
-msgstr "Klikni za odabir uređaja..."
+msgstr "کرتە بکە بۆ هەڵبژاردنی ئامێر..."
 
 #: lib/bluetooth-chooser-button.c:201 lib/bluetooth-settings-widget.c:1281
 #: sendto/main.c:447 sendto/main.c:738 sendto/main.c:794
 msgid "_Cancel"
-msgstr "_Odustani"
+msgstr "_هەڵوەشاندنەوە"
 
 #: lib/bluetooth-chooser-button.c:202
 msgid "_OK"
-msgstr "_U redu"
+msgstr "ـباشە"
 
 #: lib/bluetooth-chooser.c:135 lib/bluetooth-filter-widget.c:82
 #: lib/bluetooth-utils.c:99
 msgid "Unknown"
-msgstr "Nepoznato"
+msgstr "نەزانراو"
 
 #: lib/bluetooth-chooser.c:176
 msgid "No adapters available"
-msgstr "Nema dostupnih adaptera"
+msgstr "هیچ گونجێنەرێک بەردەست نیە"
 
 #: lib/bluetooth-chooser.c:180 lib/bluetooth-chooser.c:806
 #: lib/bluetooth-settings-widget.c:1561
 msgid "Searching for devices…"
-msgstr "Pretraživanje uređaja..."
+msgstr "گەڕان بۆ ئامێرەکان..."
 
 #: lib/bluetooth-chooser.c:698 lib/bluetooth-chooser.c:988
 msgid "Device"
-msgstr "Uređaj"
+msgstr "ئامێر"
 
 #: lib/bluetooth-chooser.c:734 lib/settings.ui:182
 msgid "Type"
-msgstr "Vrsta"
+msgstr "جۆر"
 
 #: lib/bluetooth-chooser.c:990 lib/bluetooth-settings-widget.c:1518
 msgid "Devices"
-msgstr "Uređaji"
+msgstr "ئامێرەکان"
 
 #: lib/bluetooth-filter-widget.c:72
 msgid "All categories"
-msgstr "Sve kategorije"
+msgstr "هەموو هاوپۆلەکان"
 
 #: lib/bluetooth-filter-widget.c:74 lib/settings.ui:135
 msgid "Paired"
-msgstr "Upareno"
+msgstr "پەیوەستە"
 
 #: lib/bluetooth-filter-widget.c:76
 msgid "Trusted"
-msgstr "Povjerljiv"
+msgstr "باوەڕپێکراوە"
 
 #: lib/bluetooth-filter-widget.c:78
 msgid "Not paired or trusted"
-msgstr "Nema uparenih ili povjerljivih"
+msgstr "پەیوەست و باوەڕپێکراو نیە"
 
 #: lib/bluetooth-filter-widget.c:80
 msgid "Paired or trusted"
-msgstr "Upareni ili povjerljivi"
+msgstr "پەیوەستە و باوەڕپێکراوە"
 
 #. This is the title of the filter section of the Bluetooth device chooser.
 #. * It used to say Show Only Bluetooth Devices With...
 #: lib/bluetooth-filter-widget.c:231
 msgid "Show:"
-msgstr "Prikaži:"
+msgstr "پیشاندان:"
 
 #. The device category filter
 #: lib/bluetooth-filter-widget.c:247
 msgid "Device _category:"
-msgstr "Kategorija _uređaja:"
+msgstr "هاوپۆلیـئامێر:"
 
 #: lib/bluetooth-filter-widget.c:258
 msgid "Select the device category to filter"
-msgstr "Odaberi kategoriju uređaja za izdvajanje"
+msgstr "هاوپۆلی ئامێر دیاریبکە بۆ پاڵێوکردن"
 
 #. The device type filter
 #: lib/bluetooth-filter-widget.c:272
 msgid "Device _type:"
-msgstr "Vrsta _uređaja:"
+msgstr "جۆریـئامێر:"
 
 #: lib/bluetooth-filter-widget.c:289
 msgid "Select the device type to filter"
-msgstr "Odaberi vrstu uređaja za izdvajanje"
+msgstr "جۆری ئامێر دیاریبکە بۆ پاڵێوکردن"
 
 #: lib/bluetooth-filter-widget.c:295
 msgid "Input devices (mice, keyboards, etc.)"
-msgstr "Ulazni uređaji (miševi, tipkovnice, itd.)"
+msgstr "ئامێری تێخستە (مشک، تەختەکلیل، هیتر.)"
 
 #: lib/bluetooth-filter-widget.c:299
 msgid "Headphones, headsets and other audio devices"
-msgstr "Slušalice, slušalice s mikrofonom i ostali zvučni uređaji"
+msgstr "بیستۆک، گوێبەند و ئامێری دەنگی"
 
 #: lib/bluetooth-pairing-dialog.c:83 lib/bluetooth-pairing-dialog.c:90
 #: lib/bluetooth-pairing-dialog.c:104
 msgid "Confirm Bluetooth PIN"
-msgstr "Potvrdi Bluetooth PIN"
+msgstr "کۆدی دڵنیابوونەوەی بلووتوس"
 
 #: lib/bluetooth-pairing-dialog.c:84
 #, c-format
 msgid "Please confirm the PIN that was entered on “%s”."
-msgstr "Potvrdite PIN koji je upisan na “%s“."
+msgstr "تکایە دڵنیاببەرەوە لە کۆدەکە کە لەسەر ئامێری “%s” لێدراوە."
 
 #: lib/bluetooth-pairing-dialog.c:88 lib/bluetooth-pairing-dialog.c:101
 #: lib/bluetooth-pairing-dialog.c:149
 msgid "Confirm"
-msgstr "Potvrdi"
+msgstr "دڵنیابوون"
 
 #: lib/bluetooth-pairing-dialog.c:91
 #, c-format
@@ -132,94 +131,92 @@ msgid ""
 "Confirm the Bluetooth PIN for “%s”. This can usually be found in the "
 "device’s manual."
 msgstr ""
-"Potvrdi Bluetooth PIN za “%s“. Uobičajeno može biti sadržan u uputama "
-"uređaja."
 
 #: lib/bluetooth-pairing-dialog.c:97
 #, c-format
 msgid "Pairing “%s”"
-msgstr "Uparivanje “%s“"
+msgstr "پەیوەستبوونی “%s”"
 
 #: lib/bluetooth-pairing-dialog.c:105
 #, c-format
 msgid ""
 "Please confirm that the following PIN matches the one displayed on “%s”."
-msgstr "Potvrdite da se sljedeći PIN podudara s onim prikazanim na “%s“."
+msgstr ""
 
 #: lib/bluetooth-pairing-dialog.c:110
 msgid "Bluetooth Pairing Request"
-msgstr "Zahtjev Bluetooth uparivanja"
+msgstr "داواکاری پەیوەستبوونی بلوتووس"
 
 #: lib/bluetooth-pairing-dialog.c:111
 #, c-format
 msgid "“%s” wants to pair with this device. Do you want to allow pairing?"
-msgstr "“%s“ se želi upariti s ovim uređajem. Želite li dopustiti uparivanje?"
+msgstr "ئامێری “%s” دەیەوێت پەیوەست بێت بەم ئامێرەوە. دەتەوێت ڕێگەی پێبدەیت؟"
 
 #: lib/bluetooth-pairing-dialog.c:116
 msgid "Confirm Bluetooth Connection"
-msgstr "Potvrdi Bluetooth povezivanje"
+msgstr "دڵنیابەرەوە لە پەیوەندیکرددنی بلووتوس"
 
 #: lib/bluetooth-pairing-dialog.c:117
 #, c-format
 msgid "“%s” wants to connect with this device. Do you want to allow it?"
-msgstr "“%s“ se želi povezati s ovim uređajem. Želite li to dopustiti?"
+msgstr "ئامێری “%s” دەیەوێت پەیوەست بێت بەم ئامێرەوە. دەتەوێت ڕێگەی پێبدەیت؟"
 
 #: lib/bluetooth-pairing-dialog.c:125
 #, c-format
 msgid "Please enter the following PIN on “%s”."
-msgstr "Upišite sljedeći PIN na “%s“."
+msgstr "تکایە ئەم کۆدەی خوارەوە لێبدە لەسەر ئامێری “%s”."
 
 #: lib/bluetooth-pairing-dialog.c:128
 #, c-format
 msgid ""
 "Please enter the following PIN on “%s”. Then press “Return” on the keyboard."
-msgstr "Upišite sljedeći PIN na “%s“. Zatim pritisnite “Return” na tipkovnici."
+msgstr ""
+"تکایە ئەم کۆدەی خوارەوە لێبدە لەسەر ئامێری “%s”. پاشان پەنجە بنێ بە دوگمەی "
+"“Return”  لەسەر تەختەکلیلەکە."
 
 #: lib/bluetooth-pairing-dialog.c:131
 msgid ""
 "Please move the joystick of your iCade in the following directions. Then "
 "press any of the white buttons."
 msgstr ""
-"Pomičite igraću palicu vašeg iCada u sljedećim smjerovima. Zatim pritisnite "
-"jednu od bijelih tipki."
 
 #: lib/bluetooth-pairing-dialog.c:139
 msgid "Allow"
-msgstr "Dopusti"
+msgstr "ڕێدان"
 
 #: lib/bluetooth-pairing-dialog.c:143
 msgid "Dismiss"
-msgstr "Odbaci"
+msgstr "وازهێنان"
 
 #. Cancel button
 #: lib/bluetooth-pairing-dialog.c:153 lib/bluetooth-pairing-dialog.c:308
 msgid "Cancel"
-msgstr "Odustani"
+msgstr "پاشگەزبوونەوە"
 
 #. OK button
 #: lib/bluetooth-pairing-dialog.c:289 lib/bluetooth-settings-obexpush.c:247
 msgid "Accept"
-msgstr "Prihvati"
+msgstr "پەسەند کردن"
 
 #: lib/bluetooth-settings-row.c:79 lib/bluetooth-settings-row.ui:40
 msgid "Not Set Up"
-msgstr "Nije postavljeno"
+msgstr "ڕێك نەخراوە"
 
 #: lib/bluetooth-settings-row.c:81
 msgid "Connected"
-msgstr "Povezano"
+msgstr "پەیوەستە"
 
 #: lib/bluetooth-settings-row.c:83
 msgid "Disconnected"
-msgstr "Odspojen"
+msgstr "هێڵەکە بچڕا"
 
 #: lib/bluetooth-settings-widget.c:1149
 msgid "Yes"
-msgstr "Da"
+msgstr "بەڵێ"
 
 #: lib/bluetooth-settings-widget.c:1149
 msgid "No"
-msgstr "Ne"
+msgstr "نەخێر"
 
 #. translators: first %s is the name of the computer, for example:
 #. * Visible as “Bastien Nocera’s Computer” followed by the
@@ -230,310 +227,301 @@ msgid ""
 "Visible as “%s” and available for Bluetooth file transfers. Transferred "
 "files are placed in the <a href=\"%s\">Downloads</a> folder."
 msgstr ""
-"Vidljiv kao “%s” i dostupan za Bluetooth prijenos datoteka. Prenešene "
-"datoteke su smještene u mapi <a href=\"%s\">Preuzimanja</a>."
 
 #: lib/bluetooth-settings-widget.c:1276
 #, c-format
 msgid "Remove “%s” from the list of devices?"
-msgstr "Ukloni “%s“ s popisa uređaja?"
+msgstr "ئامێری “%s” بسڕێتەوە لە لیستەی ئامێرەکان؟"
 
 #: lib/bluetooth-settings-widget.c:1278
 msgid ""
 "If you remove the device, you will have to set it up again before next use."
 msgstr ""
-"Ako uklonite uređaj, prije ponovnog korištenja morate ga ponovno postaviti."
+"ئەگەر ئامێر بسڕیتەوە، ئەوا جاری داهاتوو دەبێت دووبارە ڕێکی بخەیتەوە بۆ "
+"پەیوەستبوون."
 
 #: lib/bluetooth-settings-widget.c:1282
 msgid "_Remove"
-msgstr "_Ukloni"
+msgstr "ـسڕینەوە"
 
 #. Translators: %s is the name of the filename received
 #: lib/bluetooth-settings-obexpush.c:146
 #, c-format
 msgid "You received “%s” via Bluetooth"
-msgstr "Primili ste datoteku \"%s\" Bluetooth povezivanjem"
+msgstr "تۆ “%s” پێگەشت لە بلووتوسەوە"
 
 #: lib/bluetooth-settings-obexpush.c:148
 msgid "You received a file"
-msgstr "Primili ste datoteku"
+msgstr "پەڕگەیەکت پێگەشت"
 
 #: lib/bluetooth-settings-obexpush.c:159
 msgid "Open File"
-msgstr "Otvori datoteku"
+msgstr "پەڕگە بکەرەوە"
 
 #: lib/bluetooth-settings-obexpush.c:163
 msgid "Open Containing Folder"
-msgstr "Otvori sadržajnu mapu"
+msgstr "بوخچەی هەڵگرتنی پەڕگە بکەرەوە"
 
 #: lib/bluetooth-settings-obexpush.c:180
 msgid "File reception complete"
-msgstr "Primanje datoteka završeno"
+msgstr "وەگرتنی پەڕگە تەواو بوو"
 
 #: lib/bluetooth-settings-obexpush.c:234
 #, c-format
 msgid "Bluetooth file transfer from %s"
-msgstr "Bluetooth prijenos datoteke s %s"
+msgstr "ناردنی پەڕگەی بلووتوس لە %s"
 
 #: lib/bluetooth-settings-obexpush.c:244
 msgid "Decline"
-msgstr "Odbaci"
+msgstr "ڕەتکردنەوە"
 
 #: lib/bluetooth-utils.c:59
 msgid "Phone"
-msgstr "Telefon"
+msgstr "تەلەفۆن"
 
 #: lib/bluetooth-utils.c:61
 msgid "Modem"
-msgstr "Modem"
+msgstr "مۆدێم"
 
 #: lib/bluetooth-utils.c:63
 msgid "Computer"
-msgstr "Računalo"
+msgstr "کۆمپیوتەر"
 
 #: lib/bluetooth-utils.c:65
 msgid "Network"
-msgstr "Mreža"
+msgstr "ڕایەڵە"
 
 #. translators: a hands-free headset, a combination of a single speaker with a microphone
 #: lib/bluetooth-utils.c:68
 msgid "Headset"
-msgstr "Slušalice s mikrofonom"
+msgstr "گوێبەند"
 
 #: lib/bluetooth-utils.c:70
 msgid "Headphones"
-msgstr "Slušalice"
+msgstr "بیستۆک"
 
 #: lib/bluetooth-utils.c:72
 msgid "Audio device"
-msgstr "Zvučni uređaj"
+msgstr "ئامێر دەنگی"
 
 #: lib/bluetooth-utils.c:74
 msgid "Keyboard"
-msgstr "Tipkovnica"
+msgstr "تەختەکلیل"
 
 #: lib/bluetooth-utils.c:76
 msgid "Mouse"
-msgstr "Miš"
+msgstr "مشک"
 
 #: lib/bluetooth-utils.c:78
 msgid "Camera"
-msgstr "Kamera"
+msgstr "کامێرا"
 
 #: lib/bluetooth-utils.c:80
 msgid "Printer"
-msgstr "Pisač"
+msgstr "چاپکەر"
 
 #: lib/bluetooth-utils.c:82
 msgid "Joypad"
-msgstr "Igraći kontroler"
+msgstr "جۆیپاد"
 
 #: lib/bluetooth-utils.c:84
 msgid "Tablet"
-msgstr "Tablet"
+msgstr "تابلێت"
 
 #: lib/bluetooth-utils.c:86
 msgid "Video device"
-msgstr "Video uređaj"
+msgstr "ئامێری ڤیدیۆ"
 
 #: lib/bluetooth-utils.c:88
 msgid "Remote control"
-msgstr "Daljinski upravljač"
+msgstr "کۆنتڕۆلی دوور"
 
 #: lib/bluetooth-utils.c:90
 msgid "Scanner"
-msgstr "Skener"
+msgstr "پشکنەر"
 
 #: lib/bluetooth-utils.c:92
 msgid "Display"
-msgstr "Zaslon"
+msgstr "نیشاندان"
 
 #: lib/bluetooth-utils.c:94
 msgid "Wearable"
-msgstr "Prenosivi uređaj"
+msgstr "بەند"
 
 #: lib/bluetooth-utils.c:96
 msgid "Toy"
-msgstr "Igračka"
+msgstr "یاری"
 
 #: lib/bluetooth-utils.c:117
 msgid "All types"
-msgstr "Sve vrste"
+msgstr "هەمو جۆرەکان"
 
 #: lib/settings.ui:44
 msgid "Connection"
-msgstr "Povezivanje"
+msgstr "پەیوەندی"
 
 #: lib/settings.ui:229
 msgid "Address"
-msgstr "Adrese"
+msgstr "ناونیشان"
 
 #: lib/settings.ui:285
 msgid "_Mouse & Touchpad Settings"
-msgstr "_Postavke miša i touchpada"
+msgstr "ـڕێکخستنی مشك و بۆردی دەستلێدان"
 
 #: lib/settings.ui:299
 msgid "_Sound Settings"
-msgstr "_Postavke zvuka"
+msgstr "ـڕێکخستنی دەنگ"
 
 #: lib/settings.ui:313
 msgid "_Keyboard Settings"
-msgstr "_Postavke tipkovnice"
+msgstr "ـڕێکخستنی تەختەکلیل"
 
 #: lib/settings.ui:327
 msgid "Send _Files…"
-msgstr "Pošalji _datoteku..."
+msgstr "ناردنیـپەڕگەکان..."
 
 #: lib/settings.ui:341
 msgid "_Remove Device"
-msgstr "_Ukloni uređaj"
+msgstr "ـئامێری دووردەست"
 
 #: sendto/bluetooth-sendto.desktop.in.in:3
 msgid "Bluetooth Transfer"
-msgstr "Bluetooth prijenos"
+msgstr "ناردنی بلووتوس"
 
 #: sendto/bluetooth-sendto.desktop.in.in:4
 msgid "Send files via Bluetooth"
-msgstr "Pošalji datoteku putem Bluetootha"
+msgstr "ناردنی پەڕگە بە بلووتوس"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: sendto/bluetooth-sendto.desktop.in.in:6
+msgid "bluetooth"
+msgstr "بلوتوس"
 
 #: sendto/main.c:117
 msgid "An unknown error occurred"
-msgstr "Dogodila se nepoznata greška"
+msgstr "هەڵەیەکی نەزانراو ڕوویدا"
 
 #: sendto/main.c:130
 msgid ""
 "Make sure that the remote device is switched on and that it accepts "
 "Bluetooth connections"
-msgstr ""
-"Pobrinite se da je udaljeni uređaj uključen i da prihvaća Bluetooth "
-"povezivanja"
+msgstr "دڵنیابەرەوە کە ئامێر دوور کراوەتە کار و ڕێگە بە پەیوەندیگرتن دەدات"
 
 #: sendto/main.c:363
 #, c-format
 msgid "%'d second"
 msgid_plural "%'d seconds"
-msgstr[0] "%'d sekunda"
-msgstr[1] "%'d sekunde"
-msgstr[2] "%'d sekundi"
+msgstr[0] "%d  چرکە"
+msgstr[1] "%d  چرکە"
 
 #: sendto/main.c:368 sendto/main.c:381
 #, c-format
 msgid "%'d minute"
 msgid_plural "%'d minutes"
-msgstr[0] "%'d minuta"
-msgstr[1] "%'d minute"
-msgstr[2] "%'d minuta"
+msgstr[0] "%d  خوولەک"
+msgstr[1] "%d  خوولەک"
 
 #: sendto/main.c:379
 #, c-format
 msgid "%'d hour"
 msgid_plural "%'d hours"
-msgstr[0] "%'d sat"
-msgstr[1] "%'d sata"
-msgstr[2] "%'d sati"
+msgstr[0] "%'d کاژێر"
+msgstr[1] "%'d کاژێر"
 
 #: sendto/main.c:389
 #, c-format
 msgid "approximately %'d hour"
 msgid_plural "approximately %'d hours"
-msgstr[0] "približno %'d sat"
-msgstr[1] "približno %'d sata"
-msgstr[2] "približno %'d sati"
+msgstr[0] "بەنزیکەیی %'d کاژێر"
+msgstr[1] "بەنزیکەیی %'d کاژێر"
 
 #: sendto/main.c:402 sendto/main.c:500
 msgid "Connecting…"
-msgstr "Povezivanje…"
+msgstr "پەیوەندی گرتن..."
 
 #: sendto/main.c:444
 msgid "Bluetooth File Transfer"
-msgstr "Bluetooth prijenos datoteka"
+msgstr "گوێزەرەی پەڕگەی بلوتوس"
 
 #: sendto/main.c:448
 msgid "_Retry"
-msgstr "_Pokušaj ponovo"
+msgstr "_هەوڵدانەوە"
 
 #: sendto/main.c:470
 msgid "From:"
-msgstr "Šalje:"
+msgstr "لە:"
 
 #: sendto/main.c:484
 msgid "To:"
-msgstr "Prima:"
+msgstr "بۆ:"
 
 #: sendto/main.c:577
 #, c-format
 msgid "Sending %s"
-msgstr "Šaljem %s"
+msgstr "ناردنی %s"
 
 #: sendto/main.c:584 sendto/main.c:633
 #, c-format
 msgid "Sending file %d of %d"
-msgstr "Šaljem datoteku %d od %d"
+msgstr "ناردنی %d  لە %d"
 
 #: sendto/main.c:629
 #, c-format
 msgid "%d kB/s"
-msgstr "%d kB/s"
+msgstr "%d  کب\\چ"
 
 #: sendto/main.c:631
 #, c-format
 msgid "%d B/s"
-msgstr "%d B/s"
+msgstr "%d ب\\چ"
 
 #: sendto/main.c:662
 #, c-format
 msgid "%u transfer complete"
 msgid_plural "%u transfers complete"
-msgstr[0] "%u prijenos završen"
-msgstr[1] "%u prijenosa završena"
-msgstr[2] "%u prijenosa završeno"
+msgstr[0] "%u گواستنەوە تەواو بووە"
+msgstr[1] "%u گواستنەوەکان تەواو بووە"
 
 #: sendto/main.c:669
 msgid "_Close"
-msgstr "_Zatvori"
+msgstr "_داخستن"
 
 #: sendto/main.c:679
 msgid "There was an error"
-msgstr "Dogodila se greška"
+msgstr "هەڵەیەک هەیە"
 
 #: sendto/main.c:734
 msgid "Select device to send to"
-msgstr "Odaberite uređaj za slanje"
+msgstr "ئامێری هەڵبژێرە بۆ ناردن بۆی"
 
 #: sendto/main.c:739
 msgid "_Send"
-msgstr "_Pošalji"
+msgstr "ـناردن"
 
 #: sendto/main.c:789
 msgid "Choose files to send"
-msgstr "Odaberi datoteke za slanje"
+msgstr "پەڕگە دیاری بکە بۆ ناردن"
 
 #: sendto/main.c:795
 msgid "Select"
-msgstr "Odaberi"
+msgstr "دیاریبکە"
 
 #: sendto/main.c:825
 msgid "Remote device to use"
-msgstr "Daljinski uređaj koji želite koristiti"
+msgstr "ئامێری دورر بۆ بەکارهێنان"
 
 #: sendto/main.c:825
 msgid "ADDRESS"
-msgstr "ADRESA"
+msgstr "ADDRESS"
 
 #: sendto/main.c:827
 msgid "Remote device’s name"
-msgstr "Naziv daljinskog uređaja"
+msgstr "ناوی ئامێری دوور"
 
 #: sendto/main.c:827
 msgid "NAME"
-msgstr "NAZIV"
+msgstr "NAME"
 
 #: sendto/main.c:846
 msgid "[FILE…]"
-msgstr "[DATOTEKA...]"
-
-#~ msgid "Reveal File"
-#~ msgstr "Otkrij datoteku"
-
-#~ msgid "bluetooth"
-#~ msgstr "bluetooth"
+msgstr "[FILE…]"

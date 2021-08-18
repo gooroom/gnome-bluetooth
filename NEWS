@@ -1,3 +1,46 @@
+ver 3.34.3:
+- Fix problem with intermittent connection work-around when
+  using the switch in the device properties
+- Updated translations
+
+ver 3.34.2:
+- Work-around intermittent connection problems by disabling
+  discovery when connecting to devices
+- Hide pairing dialogue when pairing fails
+- Allow $HOME to be the Downloads dir
+- Better handling of the 8bitdo Zero gamepad
+- Updated translations
+
+ver 3.34.1:
+- Prefer “Alias” adapter name to “Name”
+- Fix some memory leaks
+- Updated translations
+
+ver 3.34.0:
+- Fix possible use-after-free when using some gnome-shell extensions
+- Updated translations
+
+ver 3.33.90:
+- Describe "Reveal" as "Open Containing Folder"
+- Updated translations
+
+ver 3.32.1:
+- Fix setup of devices that don't need pairing
+- Always try to pair pointer devices
+- Delegate audio devices quirks to bluez, which means that more
+  PIN codes can be tried without user intervention
+- Disable discovery when switching settings
+- Fix possible warnings when switching settings
+
+ver 3.32.0:
+- Add quirk for Evoluent VerticalMouse 4
+
+ver 3.31.1:
+- Accessibility fixes and support for narrow displays in
+  the Settings panel widget
+- Add support for another "Microsoft Sculpt Comfort Mouse"
+- Build improvements
+
 ver 3.28.2:
 - Use feature of BlueZ 5.51 to avoid Bluetooth adapters being left
   Discoverable if the Settings panel exits suddenly

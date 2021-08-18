@@ -43,6 +43,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Connection</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">switch_connection</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -133,6 +134,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Paired</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">paired_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -148,6 +150,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label">Yes</property>
+                <property name="selectable">True</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -178,6 +181,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Type</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">type_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -193,6 +197,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label">Keyboard</property>
+                <property name="selectable">True</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -223,6 +228,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Address</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">address_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -367,37 +373,46 @@
   <object class="GtkScrolledWindow" id="scrolledwindow1">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
+    <property name="hscrollbar-policy">never</property>
     <child>
       <object class="GtkViewport" id="viewport1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkBox" id="vbox_bluetooth">
+          <object class="BluetoothHdyColumn">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
-            <property name="margin_left">128</property>
-            <property name="margin_right">128</property>
+            <property name="maximum_width">600</property>
+            <property name="linear_growth_width">400</property>
+            <property name="margin_top">32</property>
+            <property name="margin_bottom">32</property>
+            <property name="margin_start">12</property>
+            <property name="margin_end">12</property>
             <child>
-              <object class="GtkLabel" id="explanation-label">
+              <object class="GtkBox" id="vbox_bluetooth">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_top">32</property>
-                <property name="margin_bottom">12</property>
-                <property name="label">Visible as “Bastien's computer” and available for Bluetooth file transfers. Transferred files are placed in the &lt;a href="http://www.gnome.org"&gt;Downloads&lt;/a&gt; folder.</property>
-                <property name="use_markup">True</property>
-                <property name="justify">fill</property>
-                <property name="wrap">True</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="explanation-label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label">Visible as “Bastien's computer” and available for Bluetooth file transfers. Transferred files are placed in the &lt;a href="http://www.gnome.org"&gt;Downloads&lt;/a&gt; folder.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </object>
         </child>

@@ -297,7 +297,15 @@ device_resolve_type_and_icon (Device1 *device, BluetoothType *type, const char *
 	g_return_if_fail (type);
 	g_return_if_fail (icon);
 
-	*type = bluetooth_appearance_to_type (device1_get_appearance (device));
+	if (g_strcmp0 (device1_get_name (device), "ION iCade Game Controller") == 0 ||
+	    g_strcmp0 (device1_get_name (device), "8Bitdo Zero GamePad") == 0) {
+		*type = BLUETOOTH_TYPE_JOYPAD;
+		*icon = "input-gaming";
+		return;
+	}
+
+	if (*type == 0 || *type == BLUETOOTH_TYPE_ANY)
+		*type = bluetooth_appearance_to_type (device1_get_appearance (device));
 	if (*type == 0 || *type == BLUETOOTH_TYPE_ANY)
 		*type = bluetooth_class_to_type (device1_get_class (device));
 
@@ -389,11 +397,11 @@ device_added (GDBusObjectManager   *manager,
 	char **uuids;
 	gboolean paired, trusted, connected;
 	int legacypairing;
-	BluetoothType type;
+	BluetoothType type = BLUETOOTH_TYPE_ANY;
 	GtkTreeIter iter, parent;
 
-	g_signal_connect (G_OBJECT (device), "notify",
-			  G_CALLBACK (device_notify_cb), client);
+	g_signal_connect_object (G_OBJECT (device), "notify",
+				 G_CALLBACK (device_notify_cb), client, 0);
 
 	adapter_path = device1_get_adapter (device);
 	address = device1_get_address (device);
@@ -545,11 +553,11 @@ adapter_notify_cb (Adapter1       *adapter,
 	gtk_tree_model_get (GTK_TREE_MODEL(priv->store), &iter,
 			    BLUETOOTH_COLUMN_DEFAULT, &is_default, -1);
 
-	if (g_strcmp0 (property, "name") == 0) {
-		const gchar *name = adapter1_get_name (adapter);
+	if (g_strcmp0 (property, "alias") == 0) {
+		const gchar *alias = adapter1_get_alias (adapter);
 
 		gtk_tree_store_set (priv->store, &iter,
-				    BLUETOOTH_COLUMN_NAME, name, -1);
+				    BLUETOOTH_COLUMN_ALIAS, alias, -1);
 
 		if (is_default) {
 			g_object_notify (G_OBJECT (client), "default-adapter-powered");
@@ -605,14 +613,15 @@ adapter_added (GDBusObjectManager   *manager,
 {
 	BluetoothClientPrivate *priv = BLUETOOTH_CLIENT_GET_PRIVATE(client);
 	GtkTreeIter iter;
-	const gchar *address, *name;
+	const gchar *address, *name, *alias;
 	gboolean discovering, discoverable, powered;
 
-	g_signal_connect (G_OBJECT (adapter), "notify",
-			  G_CALLBACK (adapter_notify_cb), client);
+	g_signal_connect_object (G_OBJECT (adapter), "notify",
+				 G_CALLBACK (adapter_notify_cb), client, 0);
 
 	address = adapter1_get_address (adapter);
 	name = adapter1_get_name (adapter);
+	alias = adapter1_get_alias (adapter);
 	discovering = adapter1_get_discovering (adapter);
 	powered = adapter1_get_powered (adapter);
 	discoverable = adapter1_get_discoverable (adapter);
@@ -621,6 +630,7 @@ adapter_added (GDBusObjectManager   *manager,
 					  BLUETOOTH_COLUMN_PROXY, adapter,
 					  BLUETOOTH_COLUMN_ADDRESS, address,
 					  BLUETOOTH_COLUMN_NAME, name,
+					  BLUETOOTH_COLUMN_ALIAS, alias,
 					  BLUETOOTH_COLUMN_DISCOVERING, discovering,
 					  BLUETOOTH_COLUMN_DISCOVERABLE, discoverable,
 					  BLUETOOTH_COLUMN_POWERED, powered,
@@ -798,11 +808,11 @@ object_manager_new_callback(GObject      *source_object,
 	priv = BLUETOOTH_CLIENT_GET_PRIVATE(client);
 	priv->manager = manager;
 
-	g_signal_connect (G_OBJECT (priv->manager), "interface-added", (GCallback) interface_added, client);
-	g_signal_connect (G_OBJECT (priv->manager), "interface-removed", (GCallback) interface_removed, client);
+	g_signal_connect_object (G_OBJECT (priv->manager), "interface-added", (GCallback) interface_added, client, 0);
+	g_signal_connect_object (G_OBJECT (priv->manager), "interface-removed", (GCallback) interface_removed, client, 0);
 
-	g_signal_connect (G_OBJECT (priv->manager), "object-added", (GCallback) object_added, client);
-	g_signal_connect (G_OBJECT (priv->manager), "object-removed", (GCallback) object_removed, client);
+	g_signal_connect_object (G_OBJECT (priv->manager), "object-added", (GCallback) object_added, client, 0);
+	g_signal_connect_object (G_OBJECT (priv->manager), "object-removed", (GCallback) object_removed, client, 0);
 
 	object_list = g_dbus_object_manager_get_objects (priv->manager);
 
@@ -938,7 +948,7 @@ _bluetooth_client_get_default_adapter_name (BluetoothClient *self)
 
 	path = gtk_tree_row_reference_get_path (priv->default_adapter);
 	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store), &iter, path);
-	gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter, BLUETOOTH_COLUMN_NAME, &ret, -1);
+	gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter, BLUETOOTH_COLUMN_ALIAS, &ret, -1);
 	gtk_tree_path_free (path);
 
 	return ret;
@@ -1373,16 +1383,24 @@ bluetooth_client_setup_device_finish (BluetoothClient  *client,
 				      GError          **error)
 {
 	GSimpleAsyncResult *simple;
+	char *object_path;
+	gboolean ret;
+
+	g_return_val_if_fail (path != NULL, FALSE);
 
 	simple = (GSimpleAsyncResult *) res;
 
 	g_warn_if_fail (g_simple_async_result_get_source_tag (simple) == bluetooth_client_setup_device);
 
-	if (path != NULL)
-		*path = g_object_get_data (G_OBJECT (res), "device-object-path");
+	ret = g_simple_async_result_get_op_res_gboolean (simple);
+	object_path = g_strdup (g_object_get_data (G_OBJECT (res), "device-object-path"));
+	*path = object_path;
+	g_debug ("bluetooth_client_setup_device_finish() %s (path: %s)",
+		 ret ? "success" : "failure", object_path);
 
-	if (g_simple_async_result_get_op_res_gboolean (simple))
+	if (ret)
 		return TRUE;
+
 	g_simple_async_result_propagate_error (simple, error);
 	return FALSE;
 }
@@ -1409,7 +1427,8 @@ bluetooth_client_setup_device (BluetoothClient          *client,
 					    user_data,
 					    bluetooth_client_setup_device);
 	g_simple_async_result_set_check_cancellable (simple, cancellable);
-	g_object_set_data (G_OBJECT (simple), "device-object-path", g_strdup (path));
+	g_object_set_data_full (G_OBJECT (simple), "device-object-path",
+				g_strdup (path), (GDestroyNotify) g_free);
 
 	if (get_iter_from_path (priv->store, &iter, path) == FALSE) {
 		g_simple_async_result_set_error (simple, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
@@ -1465,7 +1484,7 @@ bluetooth_client_set_trusted (BluetoothClient *client,
 	GtkTreeIter iter;
 
 	g_return_val_if_fail (BLUETOOTH_IS_CLIENT (client), FALSE);
-	g_return_val_if_fail (device != NULL, FALSE);
+	g_return_val_if_fail (device_path != NULL, FALSE);
 
 	if (get_iter_from_path (priv->store, &iter, device_path) == FALSE) {
 		g_debug ("Couldn't find device '%s' in tree to mark it as trusted", device_path);
@@ -1642,7 +1661,7 @@ bluetooth_client_dump_device (GtkTreeModel *model,
 			      GtkTreeIter *iter)
 {
 	GDBusProxy *proxy;
-	char *address, *alias, *name, *icon, **uuids;
+	char *address, *alias, *icon, **uuids;
 	gboolean is_default, paired, trusted, connected, discoverable, discovering, powered, is_adapter;
 	GtkTreeIter parent;
 	BluetoothType type;
@@ -1650,7 +1669,6 @@ bluetooth_client_dump_device (GtkTreeModel *model,
 	gtk_tree_model_get (model, iter,
 			    BLUETOOTH_COLUMN_ADDRESS, &address,
 			    BLUETOOTH_COLUMN_ALIAS, &alias,
-			    BLUETOOTH_COLUMN_NAME, &name,
 			    BLUETOOTH_COLUMN_TYPE, &type,
 			    BLUETOOTH_COLUMN_ICON, &icon,
 			    BLUETOOTH_COLUMN_DEFAULT, &is_default,
@@ -1674,7 +1692,7 @@ bluetooth_client_dump_device (GtkTreeModel *model,
 
 	if (is_adapter != FALSE) {
 		/* Adapter */
-		g_print ("Adapter: %s (%s)\n", name, address);
+		g_print ("Adapter: %s (%s)\n", alias, address);
 		if (is_default)
 			g_print ("\tDefault adapter\n");
 		g_print ("\tD-Bus Path: %s\n", proxy ? g_dbus_proxy_get_object_path (proxy) : "(none)");

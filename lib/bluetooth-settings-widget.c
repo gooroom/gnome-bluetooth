@@ -37,6 +37,7 @@
 #include "bluetooth-settings-row.h"
 #include "bluetooth-settings-obexpush.h"
 #include "bluetooth-pairing-dialog.h"
+#include "bluetooth-hdy-column.h"
 #include "pin.h"
 
 #define BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE(obj) \
@@ -64,6 +65,7 @@ struct _BluetoothSettingsWidgetPrivate {
 	char                *selected_object_path;
 
 	/* Device section */
+	GtkWidget           *device_label;
 	GtkWidget           *device_list;
 	GtkAdjustment       *focus_adjustment;
 	GtkSizeGroup        *row_sizegroup;
@@ -160,6 +162,17 @@ is_connecting (BluetoothSettingsWidget *self,
 						     bdaddr));
 }
 
+static gboolean
+has_default_adapter (BluetoothSettingsWidget *self)
+{
+	g_autofree char *default_adapter = NULL;
+	BluetoothSettingsWidgetPrivate *priv;
+
+	priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (self);
+	g_object_get (priv->client, "default-adapter", &default_adapter, NULL);
+	return (default_adapter != NULL);
+}
+
 typedef struct {
 	char             *bdaddr;
 	BluetoothSettingsWidget *self;
@@ -203,6 +216,9 @@ connect_done (GObject      *source_object,
 	remove_connecting (self, data->bdaddr);
 
 	//FIXME show an error if it failed?
+	g_object_set (G_OBJECT (priv->client),
+		      "default-adapter-discovering", has_default_adapter (self),
+		      NULL);
 
 out:
 	g_clear_error (&error);
@@ -854,6 +870,7 @@ connect_callback (GObject      *source_object,
 		  gpointer      user_data)
 {
 	SetupConnectData *data = (SetupConnectData *) user_data;
+	BluetoothSettingsWidgetPrivate *priv;
 	GError *error = NULL;
 	gboolean success;
 
@@ -874,10 +891,16 @@ connect_callback (GObject      *source_object,
 
 	turn_off_pairing (data->self, data->device);
 
+	priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (data->self);
+	g_object_set (G_OBJECT (priv->client),
+		      "default-adapter-discovering", has_default_adapter (data->self),
+		      NULL);
+
 bail:
 	if (data->timeout_id > 0)
 		g_source_remove (data->timeout_id);
 
+	g_free (data->device);
 	g_timer_destroy (data->timer);
 	g_free (data);
 }
@@ -887,7 +910,8 @@ create_callback (GObject      *source_object,
 		 GAsyncResult *res,
 		 gpointer      user_data)
 {
-	BluetoothSettingsWidgetPrivate *priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (user_data);
+	BluetoothSettingsWidget *self = user_data;
+	BluetoothSettingsWidgetPrivate *priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (self);
 	SetupConnectData *data;
 	GError *error = NULL;
 	gboolean ret;
@@ -907,10 +931,18 @@ create_callback (GObject      *source_object,
 			return;
 		}
 
+		priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (user_data);
+
+		g_clear_pointer (&priv->pairing_dialog, gtk_widget_destroy);
+
 		turn_off_pairing (user_data, path);
 
 		dbus_error = g_dbus_error_get_remote_error (error);
-		if (g_strcmp0 (dbus_error, "org.bluez.Error.AuthenticationCanceled") != 0) {
+		if (g_strcmp0 (dbus_error, "org.bluez.Error.AuthenticationFailed") == 0) {
+			//FIXME pairing failed because we entered the wrong code
+		} else if (g_strcmp0 (dbus_error, "org.bluez.Error.AuthenticationCanceled") == 0) {
+			//FIXME pairing was cancelled
+		} else {
 			//FIXME show an error?
 			/* translators:
 			 * The “%s” is the device name, for example:
@@ -927,6 +959,10 @@ create_callback (GObject      *source_object,
 		g_free (dbus_error);
 		g_error_free (error);
 		g_free (path);
+
+		g_object_set (G_OBJECT (priv->client),
+			      "default-adapter-discovering", has_default_adapter (self),
+			      NULL);
 		return;
 	}
 
@@ -1022,6 +1058,7 @@ start_pairing (BluetoothSettingsWidget *self,
 			     g_strdup (g_dbus_proxy_get_object_path (proxy)),
 			     GINT_TO_POINTER (1));
 
+	g_object_set (G_OBJECT (priv->client), "default-adapter-discovering", FALSE, NULL);
 	bluetooth_client_setup_device (priv->client,
 				       g_dbus_proxy_get_object_path (proxy),
 				       pair,
@@ -1049,6 +1086,10 @@ switch_connected_state_set (GtkSwitch               *button,
 	data->bdaddr = g_strdup (priv->selected_bdaddr);
 	data->self = self;
 
+	if (gtk_switch_get_active (button))
+		g_object_set (G_OBJECT (priv->client),
+			      "default-adapter-discovering", FALSE,
+			      NULL);
 	bluetooth_client_connect_service (priv->client,
 					  priv->selected_object_path,
 					  gtk_switch_get_active (button),
@@ -1344,16 +1385,13 @@ default_adapter_changed (BluetoothClient  *client,
 			 BluetoothSettingsWidget *self)
 {
 	BluetoothSettingsWidgetPrivate *priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (self);
-	char *default_adapter;
+	g_autofree char *default_adapter = NULL;
 
 	g_object_get (priv->client, "default-adapter", &default_adapter, NULL);
 
 	g_debug ("Default adapter changed to: %s", default_adapter ? default_adapter : "(none)");
 
 	g_object_set (G_OBJECT (client), "default-adapter-discovering", default_adapter != NULL, NULL);
-
-	/* FIXME: This should turn off automatically when
-	 * the settings panel goes away */
 	g_object_set (G_OBJECT (client), "default-adapter-discoverable", default_adapter != NULL, NULL);
 
 	g_signal_emit (G_OBJECT (self), signals[ADAPTER_STATUS_CHANGED], 0);
@@ -1501,7 +1539,7 @@ add_device_section (BluetoothSettingsWidget *self)
 {
 	BluetoothSettingsWidgetPrivate *priv = BLUETOOTH_SETTINGS_WIDGET_GET_PRIVATE (self);
 	GtkWidget *vbox;
-	GtkWidget *widget, *box, *hbox, *spinner;
+	GtkWidget *box, *hbox, *spinner;
 	GtkWidget *frame, *label;
 	gchar *s;
 
@@ -1509,7 +1547,6 @@ add_device_section (BluetoothSettingsWidget *self)
 
 	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_set_margin_top (box, 6);
-	gtk_widget_set_margin_bottom (box, 24);
 	gtk_box_pack_start (GTK_BOX (vbox), box, TRUE, TRUE, 0);
 	priv->child_box = box;
 
@@ -1517,13 +1554,13 @@ add_device_section (BluetoothSettingsWidget *self)
 	gtk_box_pack_start (GTK_BOX (box), hbox, FALSE, TRUE, 0);
 
 	s = g_markup_printf_escaped ("<b>%s</b>", _("Devices"));
-	widget = gtk_label_new (s);
+	priv->device_label = gtk_label_new (s);
 	g_free (s);
-	gtk_label_set_use_markup (GTK_LABEL (widget), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (widget), 0, 0.5);
-	gtk_widget_set_margin_end (widget, 6);
-	gtk_widget_set_margin_bottom (widget, 12);
-	gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, TRUE, 0);
+	gtk_label_set_use_markup (GTK_LABEL (priv->device_label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (priv->device_label), 0, 0.5);
+	gtk_widget_set_margin_end (priv->device_label, 6);
+	gtk_widget_set_margin_bottom (priv->device_label, 12);
+	gtk_box_pack_start (GTK_BOX (hbox), priv->device_label, FALSE, TRUE, 0);
 
 	/* Discoverable spinner */
 	priv->device_spinner = spinner = gtk_spinner_new ();
@@ -1539,16 +1576,22 @@ add_device_section (BluetoothSettingsWidget *self)
 	gtk_label_set_use_markup (GTK_LABEL (priv->visible_label), TRUE);
 	update_visibility (self);
 
-	priv->device_list = widget = gtk_list_box_new ();
-	g_signal_connect (widget, "keynav-failed", G_CALLBACK (keynav_failed), self);
-	gtk_list_box_set_selection_mode (GTK_LIST_BOX (widget), GTK_SELECTION_NONE);
-	gtk_list_box_set_header_func (GTK_LIST_BOX (widget),
+	priv->device_list = gtk_list_box_new ();
+	g_signal_connect (priv->device_list, "keynav-failed", G_CALLBACK (keynav_failed), self);
+	gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->device_list), GTK_SELECTION_NONE);
+	gtk_list_box_set_header_func (GTK_LIST_BOX (priv->device_list),
 				      update_header_func,
 				      NULL, NULL);
-	gtk_list_box_set_sort_func (GTK_LIST_BOX (widget),
+	gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->device_list),
 				    (GtkListBoxSortFunc)device_sort_func, NULL, NULL);
-	g_signal_connect_swapped (widget, "row-activated",
+	g_signal_connect_swapped (priv->device_list, "row-activated",
 				  G_CALLBACK (activate_row), self);
+        atk_object_add_relationship (ATK_OBJECT (gtk_widget_get_accessible (priv->device_label)),
+                                     ATK_RELATION_LABEL_FOR,
+                                     ATK_OBJECT (gtk_widget_get_accessible (priv->device_list)));
+        atk_object_add_relationship (ATK_OBJECT (gtk_widget_get_accessible (priv->device_list)),
+                                     ATK_RELATION_LABELLED_BY,
+                                     ATK_OBJECT (gtk_widget_get_accessible (priv->device_label)));
 
 	priv->device_stack = gtk_stack_new ();
 	gtk_stack_set_homogeneous (GTK_STACK (priv->device_stack), FALSE);
@@ -1559,7 +1602,7 @@ add_device_section (BluetoothSettingsWidget *self)
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_container_add (GTK_CONTAINER (frame), widget);
+	gtk_container_add (GTK_CONTAINER (frame), priv->device_list);
 	gtk_stack_add_named (GTK_STACK (priv->device_stack), frame, DEVICES_PAGE);
 	gtk_box_pack_start (GTK_BOX (box), priv->device_stack, TRUE, TRUE, 0);
 
@@ -1682,7 +1725,8 @@ row_changed_cb (GtkTreeModel *tree_model,
 
 		path = g_object_get_data (G_OBJECT (l->data), "object-path");
 		if (g_str_equal (object_path, path)) {
-			char *name, *bdaddr;
+			g_autofree char *name = NULL;
+			g_autofree char *bdaddr = NULL;
 			BluetoothType type;
 			gboolean paired, trusted, connected, legacy_pairing;
 
@@ -1887,6 +1931,11 @@ bluetooth_settings_widget_init (BluetoothSettingsWidget *self)
 	GtkWidget *widget;
 	GError *error = NULL;
 
+	/* This ensures the BluetoothHdyColumn type is known by GtkBuilder when
+	 * loading the UI template.
+	 */
+	g_type_ensure (BLUETOOTH_TYPE_HDY_COLUMN);
+
 	priv->cancellable = g_cancellable_new ();
 	priv->debug = g_getenv ("BLUETOOTH_DEBUG") != NULL;
 
@@ -1965,8 +2014,10 @@ bluetooth_settings_widget_finalize (GObject *object)
 
 	/* See default_adapter_changed () */
 	/* FIXME: This is blocking */
-	if (priv->client)
+	if (priv->client) {
+		g_object_set (G_OBJECT (priv->client), "default-adapter-discovering", FALSE, NULL);
 		g_object_set (G_OBJECT (priv->client), "default-adapter-discoverable", FALSE, NULL);
+	}
 
 	g_cancellable_cancel (priv->cancellable);
 	g_clear_object (&priv->cancellable);

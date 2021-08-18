@@ -66,6 +66,7 @@ G_DEFINE_TYPE(ObexAgent, obex_agent, G_TYPE_OBJECT)
 
 static ObexAgent *agent;
 static BluetoothClient *client;
+static GCancellable *cancellable;
 
 static void
 on_close_notification (NotifyNotification *notification)
@@ -116,7 +117,7 @@ notification_launch_action_on_file_cb (NotifyNotification *notification,
 					NULL,
 					G_DBUS_CALL_FLAGS_NONE,
 					-1,
-					NULL,
+					cancellable,
 					NULL,
 					NULL);
 
@@ -159,7 +160,7 @@ show_notification (const char *filename)
 						(NotifyActionCallback) notification_launch_action_on_file_cb,
 						g_strdup (file_uri), (GFreeFunc) g_free);
 	}
-	notify_notification_add_action (notification, "reveal", _("Reveal File"),
+	notify_notification_add_action (notification, "reveal", _("Open Containing Folder"),
 					(NotifyActionCallback) notification_launch_action_on_file_cb,
 					g_strdup (file_uri), (GFreeFunc) g_free);
 
@@ -404,7 +405,7 @@ check_if_bonded_or_ask (GDBusProxy *transfer,
 					  MANAGER_SERVICE,
 					  session,
 					  SESSION_IFACE,
-					  NULL,
+					  cancellable,
 					  on_check_bonded_or_ask_session_acquired,
 					  invocation);
 		g_variant_unref (v);
@@ -483,7 +484,7 @@ lookup_download_dir (void)
 	char *dir;
 
 	special_dir = g_get_user_special_dir (G_USER_DIRECTORY_DOWNLOAD);
-	if (special_dir != NULL && strcmp (special_dir, g_get_home_dir ()) != 0) {
+	if (special_dir != NULL) {
 		g_mkdir_with_parents (special_dir, 0755);
 		return g_strdup (special_dir);
 	}
@@ -624,12 +625,24 @@ obex_agent_authorize_push (GObject *source_object,
 			   GAsyncResult *res,
 			   gpointer user_data)
 {
-	GDBusProxy *transfer = g_dbus_proxy_new_for_bus_finish (res, NULL);
-	GDBusMethodInvocation *invocation = user_data;
-	GVariant *variant = g_dbus_proxy_get_cached_property (transfer, "Name");
-	const gchar *filename = g_variant_get_string (variant, NULL);
+	GDBusProxy *transfer;
+	GError *error = NULL;
+	GDBusMethodInvocation *invocation;
+	GVariant *variant;
+	const gchar *filename;
 	char *template;
 	int fd;
+
+	transfer = g_dbus_proxy_new_for_bus_finish (res, &error);
+	if (!transfer) {
+		g_debug ("obex_agent_authorize_push() failed: %s", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	invocation = user_data;
+	variant = g_dbus_proxy_get_cached_property (transfer, "Name");
+	filename = g_variant_get_string (variant, NULL);
 
 	g_debug ("AuthorizePush received");
 
@@ -679,7 +692,7 @@ handle_method_call (GDBusConnection       *connection,
 					  MANAGER_SERVICE,
 					  transfer,
 					  TRANSFER_IFACE,
-					  NULL,
+					  cancellable,
 					  obex_agent_authorize_push,
 					  invocation);
 	} else {
@@ -713,7 +726,7 @@ obexd_appeared_cb (GDBusConnection *connection,
 				NULL,
 				G_DBUS_CALL_FLAGS_NONE,
 				-1,
-				NULL,
+				cancellable,
 				NULL,
 				NULL);
 }
@@ -771,14 +784,18 @@ obex_agent_dispose (GObject *obj)
 {
 	ObexAgent *self = OBEX_AGENT (obj);
 
-	g_dbus_connection_unregister_object (self->connection, self->object_reg_id);
-	self->object_reg_id = 0;
+	if (self->object_reg_id != 0) {
+		g_dbus_connection_unregister_object (self->connection, self->object_reg_id);
+		self->object_reg_id = 0;
+	}
 
 	g_bus_unown_name (self->owner_id);
 	self->owner_id = 0;
 
-	g_bus_unwatch_name (self->obexd_watch_id);
-	self->obexd_watch_id = 0;
+	if (self->obexd_watch_id != 0) {
+		g_bus_unwatch_name (self->obexd_watch_id);
+		self->obexd_watch_id = 0;
+	}
 
 	g_clear_object (&client);
 
@@ -802,7 +819,7 @@ obex_agent_new (void)
 void
 obex_agent_down (void)
 {
-	if (agent != NULL) {
+	if (agent != NULL && agent->connection != NULL) {
 		g_dbus_connection_call (agent->connection,
 					MANAGER_SERVICE,
 					MANAGER_PATH,
@@ -817,6 +834,10 @@ obex_agent_down (void)
 					NULL);
 	}
 
+	if (cancellable != NULL) {
+		g_cancellable_cancel (cancellable);
+		g_clear_object (&cancellable);
+	}
 	g_clear_object (&agent);
 	g_clear_object (&client);
 }
@@ -830,4 +851,7 @@ obex_agent_up (void)
 	if (!notify_init ("gnome-bluetooth")) {
 		g_warning("Unable to initialize the notification system");
 	}
+
+	g_assert (cancellable == NULL);
+	cancellable = g_cancellable_new ();
 }
