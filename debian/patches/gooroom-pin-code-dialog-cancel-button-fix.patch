@@ -1,0 +1,12 @@
+diff --git a/lib/bluetooth-pairing-dialog.c b/lib/bluetooth-pairing-dialog.c
+index 704f6ff..3827591 100644
+--- a/lib/bluetooth-pairing-dialog.c
++++ b/lib/bluetooth-pairing-dialog.c
+@@ -228,6 +228,7 @@ response_cb (GtkWidget *button,
+ 		g_assert_not_reached ();
+ 
+ 	gtk_dialog_response (GTK_DIALOG (user_data), response);
++    gtk_widget_destroy(GTK_WIDGET(user_data));
+ }
+ 
+ static void
