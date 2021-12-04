@@ -1,3 +1,12 @@
+gnome-bluetooth (3.34.3-2+grm3u1) unstable; urgency=medium
+
+  [ seolhee.sun ]
+  * [904c85a4] [Bug:1934] Fixed to destroy when pin code dialog cancel button click
+  * [dc8d77ed] [Bug:3151] Unknown type bluetooth filter
+  * [78adcd09] [Bug:3151] Changed filter value
+
+ -- Gooroom Autobuilder <jenkins@gooroom.kr>  Sat, 04 Dec 2021 22:02:49 +0900
+
 gnome-bluetooth (3.34.3-2) unstable; urgency=medium
 
   * debian/gnome-bluetooth.docs: refreshed to follow upstream renaming
